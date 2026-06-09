@@ -1,14 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Govindachari | Portfolio</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Govindachari | Portfolio</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Segoe UI,sans-serif;background:linear-gradient(135deg,#0a0f2c,#111827);color:#fff}
+nav{display:flex;justify-content:space-between;padding:20px 8%;position:sticky;top:0;background:rgba(0,0,0,.3);backdrop-filter:blur(10px)}
+.logo{font-size:28px;font-weight:700;color:#a855f7}
+.hero{display:flex;align-items:center;justify-content:space-between;gap:40px;padding:80px 8%;flex-wrap:wrap}
+.left{flex:1;min-width:300px}
+.right{flex:1;min-width:300px;text-align:center}
+.profile{width:260px;height:260px;border-radius:50%;object-fit:cover;border:5px solid #8b5cf6;box-shadow:0 0 35px #8b5cf6}
+h1{font-size:60px}
+.highlight{color:#60a5fa}
+.btns a{display:inline-block;margin:10px;padding:12px 22px;border-radius:30px;text-decoration:none;color:white}
+.cv{background:#8b5cf6}
+.contact{border:1px solid #8b5cf6}
+.section{padding:70px 8%}
+.title{text-align:center;color:#a855f7;font-size:40px;margin-bottom:30px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.card{background:#151c35;padding:25px;border-radius:20px;box-shadow:0 0 15px rgba(168,85,247,.2)}
+.score{font-size:48px;color:#22c55e;font-weight:bold}
+.bar{height:12px;background:#222;border-radius:20px;overflow:hidden;margin-top:8px}
+.fill{height:100%;background:linear-gradient(90deg,#8b5cf6,#3b82f6)}
+footer{text-align:center;padding:30px;color:#9ca3af}
+.laptop{font-size:140px}
+</style>
 </head>
-<body style="background:black;color:white;font-family:Arial;text-align:center;padding-top:100px;">
+<body>
 
-<h1>Govindachari</h1>
+<nav>
+<div class="logo">Govindachari</div>
+<div>AI & ML Portfolio</div>
+</nav>
+
+<section class="hero">
+<div class="left">
+<h1>Hi, I'm <span class="highlight">Govindachari</span></h1>
 <h2>Aspiring AI & ML Engineer</h2>
+<br>
+<p>17 years old • India</p>
+<br>
+<p>Learning Python, building projects, and working toward a future in Artificial Intelligence and Machine Learning.</p>
+<br>
+<div class="btns">
+<a class="cv" href="resume.pdf">Download CV</a>
+<a class="contact" href="mailto:govindachariu289@gmail.com">Contact Me</a>
+</div>
+</div>
 
-<p>Currently learning Python and building my future in AI.</p>
+<div class="right">
+<img src="profile.png" class="profile" alt="Profile">
+<div class="laptop">💻</div>
+</div>
+</section>
 
+<section class="section">
+<h2 class="title">Achievements</h2>
+<div class="grid">
+<div class="card">
+<h3>🏆 Class 10 Board</h3>
+<div class="score">97.2%</div>
+</div>
+<div class="card">
+<h3>🎓 Class 12 Board</h3>
+<div class="score">77%</div>
+</div>
+</div>
+</section>
+
+<section class="section">
+<h2 class="title">Skills</h2>
+<div class="card">
+<p>Python</p><div class="bar"><div class="fill" style="width:70%"></div></div><br>
+<p>DSA</p><div class="bar"><div class="fill" style="width:20%"></div></div><br>
+<p>Machine Learning</p><div class="bar"><div class="fill" style="width:10%"></div></div>
+</div>
+</section>
+
+<section class="section">
+<h2 class="title">Projects</h2>
+<div class="grid">
+<div class="card">🚀 Python Projects Coming Soon</div>
+<div class="card">🤖 AI/ML Projects Coming Soon</div>
+</div>
+</section>
+
+<section class="section">
+<h2 class="title">Contact</h2>
+<div class="card">
+<p>Email: govindachariu289@gmail.com</p>
+<p>Instagram: @govindachariupadhyay</p>
+</div>
+</section>
+
+<footer>© 2026 Govindachari</footer>
 </body>
 </html>
