@@ -3,34 +3,41 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Govindachari | Portfolio V2</title>
+<title>Govindachari | AI & ML Portfolio</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,sans-serif}
-body{background:linear-gradient(135deg,#050816,#0f172a);color:#fff}
-nav{position:sticky;top:0;background:rgba(0,0,0,.35);backdrop-filter:blur(10px);padding:18px 8%;display:flex;justify-content:space-between}
-nav ul{display:flex;gap:20px;list-style:none}
-.hero{display:flex;justify-content:space-between;align-items:center;padding:80px 8%;flex-wrap:wrap}
-.hero img{width:260px;height:260px;border-radius:50%;border:5px solid #a855f7;box-shadow:0 0 35px #a855f7;object-fit:cover}
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+body{font-family:Segoe UI,sans-serif;background:#0b0b0b;color:#f5f5f5}
+nav{position:sticky;top:0;z-index:100;background:rgba(0,0,0,.9);padding:18px 8%;display:flex;justify-content:space-between;border-bottom:1px solid #d4af37}
+nav ul{display:flex;gap:22px;list-style:none}
+nav li{color:#d4af37}
+.logo{font-weight:700;font-size:28px;color:#d4af37}
+.hero{display:flex;justify-content:space-between;align-items:center;padding:90px 8%;flex-wrap:wrap}
 .left{max-width:650px}
-h1{font-size:64px}
-.accent{color:#60a5fa}
-.btn{display:inline-block;margin:10px;padding:12px 22px;border-radius:30px;text-decoration:none;color:#fff}
-.primary{background:linear-gradient(90deg,#8b5cf6,#ec4899)}
-.secondary{border:1px solid #8b5cf6}
-.section{padding:60px 8%}
-.title{text-align:center;color:#c084fc;margin-bottom:30px;font-size:42px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
-.card{background:#111827;padding:25px;border-radius:20px;box-shadow:0 0 15px rgba(168,85,247,.15)}
-.score{font-size:48px;color:#22c55e;font-weight:bold}
-.bar{height:12px;background:#222;border-radius:20px;overflow:hidden;margin:8px 0 20px}
-.fill{height:100%;background:linear-gradient(90deg,#8b5cf6,#3b82f6)}
-.social a{margin-right:10px;color:#fff;text-decoration:none}
-footer{text-align:center;padding:30px;color:#94a3b8}
+.left h1{font-size:68px}
+.gold{color:#d4af37}
+.left h2{margin:12px 0}
+.quote{font-style:italic;color:#d4af37;margin:20px 0}
+.btn{display:inline-block;padding:14px 24px;border-radius:30px;text-decoration:none;margin:10px}
+.cv{background:#d4af37;color:#000;font-weight:700}
+.contact{border:1px solid #d4af37;color:#d4af37}
+.profile{width:280px;height:280px;border-radius:50%;object-fit:cover;border:5px solid #d4af37;box-shadow:0 0 35px #d4af37}
+.laptop{margin-top:25px;background:#111;border:2px solid #d4af37;border-radius:15px;padding:25px;text-align:center;color:#d4af37;font-size:32px;font-weight:bold}
+.section{padding:70px 8%}
+.title{text-align:center;color:#d4af37;font-size:42px;margin-bottom:35px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px}
+.card{background:#121212;border:1px solid #2a2a2a;border-radius:20px;padding:25px;transition:.3s}
+.card:hover{transform:translateY(-8px);box-shadow:0 0 20px rgba(212,175,55,.35)}
+.score{font-size:54px;color:#d4af37;font-weight:700}
+.bar{height:12px;background:#222;border-radius:30px;overflow:hidden;margin:8px 0 20px}
+.fill{height:100%;background:#d4af37}
+.social a{color:#d4af37;text-decoration:none;margin-right:15px}
+footer{text-align:center;padding:35px;color:#aaa;border-top:1px solid #222}
 </style>
 </head>
 <body>
+
 <nav>
-<div><b>Govindachari</b></div>
+<div class="logo">Govindachari</div>
 <ul>
 <li>Home</li><li>About</li><li>Skills</li><li>Achievements</li><li>Projects</li><li>Contact</li>
 </ul>
@@ -38,13 +45,14 @@ footer{text-align:center;padding:30px;color:#94a3b8}
 
 <section class="hero">
 <div class="left">
-<h1>Hi, I'm <span class="accent">Govindachari</span></h1>
-<h2>Aspiring AI & ML Engineer</h2><br>
-<p>17 years old • India</p><br>
-<p>Learning Python and building toward a future in Artificial Intelligence and Machine Learning.</p>
+<h1>Hi, I'm <span class="gold">Govindachari</span></h1>
+<h2>Aspiring AI & ML Engineer</h2>
+<p>17 Years Old • India</p>
+<p class="quote">"Learning, Building, Improving Every Day."</p>
+<p>Passionate about Artificial Intelligence, Machine Learning, Python and problem solving.</p>
 <br>
-<a class="btn primary" href="resume.pdf">Download CV</a>
-<a class="btn secondary" href="mailto:govindachariu289@gmail.com">Contact Me</a>
+<a class="btn cv" href="resume.pdf">Download CV</a>
+<a class="btn contact" href="mailto:govindachariu289@gmail.com">Contact Me</a>
 <br><br>
 <div class="social">
 <a href="https://github.com/govindachariu289">GitHub</a>
@@ -52,23 +60,33 @@ footer{text-align:center;padding:30px;color:#94a3b8}
 <a href="mailto:govindachariu289@gmail.com">Email</a>
 </div>
 </div>
+
 <div>
-<img src="profile.png" alt="Profile">
+<img src="profile.png" class="profile">
+<div class="laptop">AI • ML</div>
 </div>
 </section>
 
 <section class="section">
 <h2 class="title">About Me</h2>
 <div class="card">
-Passionate about AI, ML, Python and problem solving. My goal is to become a skilled AI Engineer and build impactful technology.
+I am Govindachari from India. I am currently learning Python and building the foundation required to become an AI & Machine Learning Engineer. This portfolio documents my journey, achievements and future projects.
 </div>
 </section>
 
 <section class="section">
 <h2 class="title">Achievements</h2>
 <div class="grid">
-<div class="card"><h3>🏆 10th Board</h3><div class="score">97.2%</div></div>
-<div class="card"><h3>🎓 12th Board</h3><div class="score">77%</div></div>
+<div class="card">
+<h3>🏆 Class 10 Board</h3>
+<div class="score">97.2%</div>
+<p>Outstanding Academic Performance</p>
+</div>
+<div class="card">
+<h3>🎓 Class 12 Board</h3>
+<div class="score">77%</div>
+<p>Higher Secondary Education</p>
+</div>
 </div>
 </section>
 
@@ -78,28 +96,30 @@ Passionate about AI, ML, Python and problem solving. My goal is to become a skil
 Python<div class="bar"><div class="fill" style="width:75%"></div></div>
 DSA<div class="bar"><div class="fill" style="width:25%"></div></div>
 Machine Learning<div class="bar"><div class="fill" style="width:15%"></div></div>
-AI<div class="bar"><div class="fill" style="width:20%"></div></div>
+Artificial Intelligence<div class="bar"><div class="fill" style="width:20%"></div></div>
 </div>
 </section>
 
 <section class="section">
 <h2 class="title">Projects</h2>
 <div class="grid">
-<div class="card">🚀 Python Projects Coming Soon</div>
-<div class="card">🤖 AI/ML Projects Coming Soon</div>
-<div class="card">🌐 Portfolio Website</div>
+<div class="card">🚀 Python Project - Coming Soon</div>
+<div class="card">🤖 AI Project - Coming Soon</div>
+<div class="card">🌐 Personal Portfolio Website</div>
 </div>
 </section>
 
 <section class="section">
 <h2 class="title">Contact</h2>
 <div class="card">
-Email: govindachariu289@gmail.com<br>
-Instagram: @govindachariupadhyay<br>
-GitHub: govindachariu289
+📧 Email: govindachariu289@gmail.com<br><br>
+📱 Phone: +91 9142995391<br><br>
+📷 Instagram: @govindachariupadhyay<br><br>
+💻 GitHub: govindachariu289
 </div>
 </section>
 
-<footer>© 2026 Govindachari</footer>
+<footer>© 2026 Govindachari | AI & ML Portfolio</footer>
+
 </body>
 </html>
