@@ -1,189 +1,196 @@
 // Compliance Rule Engine for LabelGuard AI
-// This module defines the compliance rules based on Legal Metrology (Packaged Commodities) Rules, 2011
+// This service evaluates extracted fields against compliance rules
 
-export const complianceRules = [
+// Configurable compliance rules based on Legal Metrology (Packaged Commodities) Rules, 2011
+const complianceRules = [
   {
     id: 'mrp',
     field: 'MRP',
     label: 'Maximum Retail Price',
     required: true,
-    description: 'Every packaged commodity must display the Maximum Retail Price inclusive of all taxes.',
-    action: 'Ensure MRP is clearly visible and includes "Rs." or "₹" symbol.'
+    description: 'MRP must be clearly declared with ₹ symbol',
+    evaluate: (value) => {
+      if (!value) return 'missing';
+      // Check if value contains ₹ or Rs
+      if (typeof value === 'string' && (value.includes('₹') || value.toLowerCase().includes('rs'))) {
+        return 'present';
+      }
+      // If it's just a number, still consider it present but flag for review
+      return 'review';
+    }
   },
   {
     id: 'net_quantity',
-    field: 'NetQuantity',
+    field: 'Net Quantity',
     label: 'Net Quantity',
     required: true,
-    description: 'Net quantity must be declared in standard units (g, kg, ml, L, etc.).',
-    action: 'Verify quantity is expressed in appropriate metric units.'
+    description: 'Net quantity must be declared in standard units (g, kg, ml, L, etc.)',
+    evaluate: (value) => {
+      if (!value) return 'missing';
+      const units = ['g', 'kg', 'ml', 'l', 'L', 'mg', 'pcs', 'pieces'];
+      const hasUnit = units.some(unit => value.toLowerCase().includes(unit));
+      return hasUnit ? 'present' : 'review';
+    }
   },
   {
     id: 'manufacturer',
     field: 'Manufacturer',
     label: 'Manufacturer/Packer Details',
     required: true,
-    description: 'Name and complete address of manufacturer/packer must be provided.',
-    action: 'Ensure full address including pin code is visible.'
+    description: 'Name and complete address of manufacturer/packer must be provided',
+    evaluate: (value) => {
+      if (!value) return 'missing';
+      if (value.length > 20) return 'present';
+      return 'review';
+    }
   },
   {
     id: 'consumer_care',
-    field: 'ConsumerCare',
+    field: 'Consumer Care',
     label: 'Consumer Care Details',
     required: true,
-    description: 'Contact information for consumer complaints must be displayed.',
-    action: 'Verify phone number or email is provided.'
+    description: 'Consumer care contact information must be provided',
+    evaluate: (value) => {
+      if (!value) return 'missing';
+      // Check for phone number pattern or email
+      if (/\d{10}/.test(value.replace(/\D/g, '')) || value.includes('@')) {
+        return 'present';
+      }
+      return 'review';
+    }
   },
   {
     id: 'country_origin',
-    field: 'CountryOfOrigin',
+    field: 'Country of Origin',
     label: 'Country of Origin',
     required: true,
-    description: 'Country where the product was manufactured must be declared.',
-    action: 'Ensure "Made in India" or equivalent is present.'
+    description: 'Country of origin must be declared for imported products',
+    evaluate: (value) => {
+      if (!value) return 'missing';
+      return 'present';
+    }
   },
   {
     id: 'batch_lot',
-    field: 'BatchLot',
+    field: 'Batch',
     label: 'Batch/Lot Information',
     required: true,
-    description: 'Batch or lot code for traceability must be present.',
-    action: 'Verify batch/lot code is legible.'
+    description: 'Batch or lot code must be declared',
+    evaluate: (value) => {
+      if (!value) return 'missing';
+      if (value.length >= 3) return 'present';
+      return 'review';
+    }
   },
   {
     id: 'date',
-    field: 'DateMonthYear',
+    field: 'Date',
     label: 'Manufacturing/Expiry Date',
     required: true,
-    description: 'Date of manufacture or best before/expiry date must be declared.',
-    action: 'Ensure date format is clear (MM/YYYY or DD/MM/YYYY).'
+    description: 'Date of manufacturing or expiry must be declared',
+    evaluate: (value) => {
+      if (!value) return 'missing';
+      // Check for date patterns
+      if (/\d{2}\/\d{2}\/\d{2,4}/.test(value) || /\d{2}\/\d{4}/.test(value)) {
+        return 'present';
+      }
+      return 'review';
+    }
   }
 ];
 
 /**
- * Evaluates compliance status for a given field value
- * @param {string} value - The extracted value for the field
- * @param {object} rule - The compliance rule object
- * @returns {object} - Status object with status, confidence, and details
+ * Evaluates extracted fields against compliance rules
+ * @param {Object} extractedFields - Object containing extracted field values
+ * @returns {Array} Array of compliance check results
  */
-export const evaluateFieldCompliance = (value, rule) => {
-  if (!value || value.trim() === '' || value.toLowerCase() === 'not detected') {
+export const evaluateCompliance = (extractedFields) => {
+  const results = [];
+  
+  complianceRules.forEach(rule => {
+    const value = extractedFields[rule.field.toLowerCase()] || extractedFields[rule.field];
+    const status = rule.evaluate(value);
+    
+    results.push({
+      id: rule.id,
+      field: rule.field,
+      label: rule.label,
+      value: value || null,
+      status,
+      required: rule.required,
+      description: rule.description,
+      explanation: getExplanation(rule, value, status)
+    });
+  });
+  
+  return results;
+};
+
+/**
+ * Generates explanation for each compliance check
+ */
+const getExplanation = (rule, value, status) => {
+  if (status === 'missing') {
     return {
-      status: 'missing',
-      confidence: 95,
-      message: `${rule.label} not detected on label`
+      detected: 'Not found on label',
+      whyItMatters: rule.description,
+      suggestedAction: `Add ${rule.label.toLowerCase()} declaration to the product label`
     };
   }
-
-  // Check for low confidence indicators
-  if (value.includes('[?]') || value.includes('uncertain')) {
+  
+  if (status === 'review') {
     return {
-      status: 'review',
-      confidence: 60,
-      message: `${rule.label} detected but requires verification`
+      detected: value ? `"${value}"` : 'Unclear',
+      whyItMatters: `${rule.description}. Current value may need verification.`,
+      suggestedAction: `Verify that "${value}" meets legal metrology requirements for ${rule.label.toLowerCase()}`
     };
   }
-
-  // Additional validation for specific fields
-  if (rule.id === 'mrp') {
-    const hasCurrency = /₹|rs\.?|rupees?/i.test(value);
-    const hasNumber = /\d+/.test(value);
-    if (!hasCurrency || !hasNumber) {
-      return {
-        status: 'review',
-        confidence: 70,
-        message: 'MRP format may be incomplete - verify currency symbol and amount'
-      };
-    }
-  }
-
-  if (rule.id === 'net_quantity') {
-    const hasUnit = /g|kg|ml|l|mg/i.test(value);
-    const hasNumber = /\d+/.test(value);
-    if (!hasUnit || !hasNumber) {
-      return {
-        status: 'review',
-        confidence: 65,
-        message: 'Net quantity format may be incomplete - verify unit and value'
-      };
-    }
-  }
-
-  if (rule.id === 'date') {
-    const hasDatePattern = /\d{1,2}[\/-]\d{2,4}/.test(value) || /\d{4}/.test(value);
-    if (!hasDatePattern) {
-      return {
-        status: 'review',
-        confidence: 60,
-        message: 'Date format unclear - verify manufacturing/expiry date'
-      };
-    }
-  }
-
+  
   return {
-    status: 'present',
-    confidence: 85 + Math.floor(Math.random() * 10),
-    message: `${rule.label} properly declared`
+    detected: value ? `"${value}"` : 'Present',
+    whyItMatters: `${rule.label} is properly declared`,
+    suggestedAction: 'No action required'
   };
 };
 
 /**
- * Calculates overall compliance score based on field evaluations
- * @param {array} evaluations - Array of field evaluation results
- * @returns {number} - Compliance score (0-100)
+ * Calculates overall compliance score
+ * @param {Array} results - Array of compliance check results
+ * @returns {Object} Score breakdown
  */
-export const calculateComplianceScore = (evaluations) => {
-  if (!evaluations || evaluations.length === 0) return 0;
-
-  let totalPoints = 0;
-  let earnedPoints = 0;
-
-  evaluations.forEach(eval => {
-    const rule = complianceRules.find(r => r.id === eval.ruleId);
-    const weight = rule?.required ? 15 : 10;
-    totalPoints += weight;
-
-    if (eval.status === 'present') {
-      earnedPoints += weight;
-    } else if (eval.status === 'review') {
-      earnedPoints += weight * 0.5;
+export const calculateComplianceScore = (results) => {
+  const totalChecks = results.length;
+  const present = results.filter(r => r.status === 'present').length;
+  const review = results.filter(r => r.status === 'review').length;
+  const missing = results.filter(r => r.status === 'missing').length;
+  
+  // Score calculation: present = 100%, review = 50%, missing = 0%
+  const score = Math.round(((present * 100) + (review * 50)) / totalChecks);
+  
+  let overallStatus = 'compliant';
+  if (missing > 0) overallStatus = 'non-compliant';
+  else if (review > 0) overallStatus = 'needs-review';
+  
+  return {
+    score,
+    overallStatus,
+    breakdown: {
+      present,
+      review,
+      missing,
+      total: totalChecks
     }
-    // missing gets 0 points
-  });
-
-  return Math.round((earnedPoints / totalPoints) * 100);
+  };
 };
 
 /**
- * Gets overall status based on compliance score
- * @param {number} score - Compliance score
- * @returns {object} - Status object with label, color, and description
+ * Gets all available compliance rules
+ * @returns {Array} Array of compliance rules
  */
-export const getOverallStatus = (score) => {
-  if (score >= 90) {
-    return {
-      label: 'Compliant',
-      color: 'success',
-      description: 'All mandatory declarations appear to be present.'
-    };
-  } else if (score >= 70) {
-    return {
-      label: 'Needs Review',
-      color: 'warning',
-      description: 'Some declarations require verification or clarification.'
-    };
-  } else {
-    return {
-      label: 'Non-Compliant',
-      color: 'danger',
-      description: 'Multiple mandatory declarations are missing or unclear.'
-    };
-  }
-};
+export const getComplianceRules = () => complianceRules;
 
 export default {
-  complianceRules,
-  evaluateFieldCompliance,
+  evaluateCompliance,
   calculateComplianceScore,
-  getOverallStatus
+  getComplianceRules
 };
